@@ -1,0 +1,70 @@
+[global_tags]
+  dc = "ap-south-1" # will tag all metrics with dc=us-east-1
+  host  = "$HOSTNAME"
+[agent]
+  interval = "1m"
+  round_interval = true
+  metric_batch_size = 1000
+  metric_buffer_limit = 10000
+  collection_jitter = "30s"
+  flush_jitter = "0s"
+  precision = ""
+  logfile = "/var/log/telegraf/telegraf.log"
+  hostname = ""
+  omit_hostname = false
+###############################################################################
+#                        	OUTPUT PLUGINS                               	#
+###############################################################################
+[[outputs.influxdb]]
+  urls = ["http://10.78.10.221:8086"] # required
+  database = "Zollege-MariaDB-Master" # required
+  retention_policy = ""
+  write_consistency = "any"
+  timeout = "5s"
+  content_encoding = "gzip"
+###############################################################################
+#                        	INPUT PLUGINS                                	#
+###############################################################################
+[[inputs.cpu]]
+  percpu = true
+  totalcpu = true
+  collect_cpu_time = false
+  report_active = false
+[[inputs.disk]]
+  mount_points = ["/"]
+  fielddrop=["used","inodes_used"]
+  ignore_fs = ["tmpfs", "devtmpfs", "devfs"]
+[[inputs.diskio]]
+[[inputs.mem]]
+  fielddrop=["active","buffered","cached","free","inactive","used","used_percent"]
+[[inputs.processes]]
+  # no configuration
+[[inputs.swap]]
+  fielddrop=["free","total"]
+[[inputs.system]]
+  fielddrop=["n_users","uptime_format"]
+[[inputs.net_response]]
+  protocol = "tcp"
+  address = ":22"
+  timeout = "5s"
+  read_timeout = "5s"
+[[inputs.net_response]]
+  protocol = "tcp"
+  address = ":80"
+  timeout = "5s"
+  read_timeout = "5s"
+[[inputs.net_response]]
+  protocol = "tcp"
+  address = "127.0.0.1:9000"
+  timeout = "5s"
+  read_timeout = "5s"
+[[inputs.net_response]]
+  protocol = "tcp"
+  address = ":443"
+  timeout = "5s"
+  read_timeout = "5s"
+[[inputs.kernel]]
+[[inputs.net]]
+[[inputs.netstat]]
+[[inputs.interrupts]]
+[[inputs.linux_sysctl_fs]]
